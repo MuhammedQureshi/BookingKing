@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
-import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { CalendarOff, X, Plus, CalendarDays } from "lucide-react";
 import { format, isBefore, startOfDay } from "date-fns";
@@ -25,21 +24,19 @@ const BlockedDatesPage = ({ token, business, onUpdate }) => {
 
   const handleBlockDate = async () => {
     if (!selectedDate) {
-      toast.error("Please select a date");
+      toast.error("Select a date");
       return;
     }
 
     const dateStr = format(selectedDate, "yyyy-MM-dd");
     
     if (blockedDates.includes(dateStr)) {
-      toast.error("This date is already blocked");
+      toast.error("Already blocked");
       return;
     }
 
     try {
-      await axios.post(`${API}/admin/blocked-dates`, {
-        date: dateStr
-      }, {
+      await axios.post(`${API}/admin/blocked-dates`, { date: dateStr }, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -48,7 +45,6 @@ const BlockedDatesPage = ({ token, business, onUpdate }) => {
       toast.success("Date blocked!");
       if (onUpdate) onUpdate();
     } catch (error) {
-      console.error("Failed to block date:", error);
       toast.error("Failed to block date");
     }
   };
@@ -60,11 +56,10 @@ const BlockedDatesPage = ({ token, business, onUpdate }) => {
       });
 
       setBlockedDates(blockedDates.filter(d => d !== dateStr));
-      toast.success("Date unblocked");
+      toast.success("Unblocked");
       if (onUpdate) onUpdate();
     } catch (error) {
-      console.error("Failed to unblock date:", error);
-      toast.error("Failed to unblock date");
+      toast.error("Failed to unblock");
     }
   };
 
@@ -78,45 +73,40 @@ const BlockedDatesPage = ({ token, business, onUpdate }) => {
 
   if (loading) {
     return (
-      <div className="space-y-6 max-w-4xl" data-testid="blocked-dates-page-loading">
+      <div className="space-y-4">
         <div>
-          <h1 className="text-2xl font-bold font-heading">Blocked Dates</h1>
-          <p className="text-muted-foreground text-sm mt-1">Block dates when you're unavailable</p>
+          <h1 className="text-xl sm:text-2xl font-bold font-heading">Blocked Dates</h1>
+          <p className="text-muted-foreground text-sm">Unavailable days</p>
         </div>
-        <div className="grid lg:grid-cols-2 gap-6">
-          <div className="h-80 bg-zinc-100 rounded-xl animate-pulse" />
-          <div className="h-80 bg-zinc-100 rounded-xl animate-pulse" />
+        <div className="grid lg:grid-cols-2 gap-4">
+          <div className="h-72 bg-zinc-100 rounded-xl animate-pulse" />
+          <div className="h-72 bg-zinc-100 rounded-xl animate-pulse" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 max-w-4xl" data-testid="blocked-dates-page">
+    <div className="space-y-4" data-testid="blocked-dates-page">
       <div>
-        <h1 className="text-2xl font-bold font-heading">Blocked Dates</h1>
-        <p className="text-muted-foreground text-sm mt-1">Block dates when you're unavailable</p>
+        <h1 className="text-xl sm:text-2xl font-bold font-heading">Blocked Dates</h1>
+        <p className="text-muted-foreground text-sm">Unavailable days</p>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-6">
+      <div className="grid lg:grid-cols-2 gap-4">
         {/* Calendar */}
         <Card className="border-0 shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-lg font-heading">Select Date</CardTitle>
-            <CardDescription>
-              Click a date to select it for blocking
-            </CardDescription>
+          <CardHeader className="pb-2 px-4">
+            <CardTitle className="text-base font-heading">Select Date</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="flex justify-center mb-4">
+          <CardContent className="px-4 pb-4">
+            <div className="flex justify-center mb-3">
               <Calendar
                 mode="single"
                 selected={selectedDate}
                 onSelect={setSelectedDate}
                 disabled={isDateDisabled}
-                modifiers={{
-                  blocked: (date) => isDateBlocked(date)
-                }}
+                modifiers={{ blocked: isDateBlocked }}
                 modifiersStyles={{
                   blocked: { 
                     backgroundColor: "hsl(var(--destructive))", 
@@ -126,22 +116,22 @@ const BlockedDatesPage = ({ token, business, onUpdate }) => {
                 }}
                 className="rounded-xl border-0 p-0"
                 classNames={{
-                  months: "space-y-4",
-                  month: "space-y-4",
+                  months: "space-y-3",
+                  month: "space-y-3",
                   caption: "flex justify-center pt-1 relative items-center",
                   caption_label: "text-sm font-semibold",
                   nav: "space-x-1 flex items-center",
-                  nav_button: "h-8 w-8 bg-transparent p-0 opacity-50 hover:opacity-100 hover:bg-zinc-100 rounded-lg transition-all",
+                  nav_button: "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 hover:bg-zinc-100 rounded-lg",
                   nav_button_previous: "absolute left-1",
                   nav_button_next: "absolute right-1",
                   table: "w-full border-collapse",
                   head_row: "flex",
-                  head_cell: "text-muted-foreground rounded-md w-10 font-normal text-[0.8rem]",
+                  head_cell: "text-muted-foreground rounded-md w-8 font-normal text-[0.7rem]",
                   row: "flex w-full mt-1",
-                  cell: "h-10 w-10 text-center text-sm p-0 relative",
-                  day: "h-10 w-10 p-0 font-normal aria-selected:opacity-100 hover:bg-zinc-100 rounded-lg transition-all",
+                  cell: "h-8 w-8 text-center text-xs p-0 relative",
+                  day: "h-8 w-8 p-0 font-normal hover:bg-zinc-100 rounded-lg",
                   day_selected: "bg-primary text-primary-foreground hover:bg-primary",
-                  day_today: "bg-zinc-100 text-foreground",
+                  day_today: "bg-zinc-100",
                   day_disabled: "text-muted-foreground opacity-50",
                 }}
                 data-testid="blocked-dates-calendar"
@@ -150,54 +140,51 @@ const BlockedDatesPage = ({ token, business, onUpdate }) => {
             <Button
               onClick={handleBlockDate}
               disabled={!selectedDate}
-              className="w-full rounded-lg"
+              className="w-full"
+              size="sm"
               data-testid="block-date-button"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Block Selected Date
+              Block Date
             </Button>
           </CardContent>
         </Card>
 
-        {/* Blocked Dates List */}
+        {/* List */}
         <Card className="border-0 shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-lg font-heading">Blocked Dates</CardTitle>
-            <CardDescription>
-              {blockedDates.length} date{blockedDates.length !== 1 ? 's' : ''} blocked
-            </CardDescription>
+          <CardHeader className="pb-2 px-4">
+            <CardTitle className="text-base font-heading">Blocked ({blockedDates.length})</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-4 pb-4">
             {blockedDates.length === 0 ? (
-              <div className="text-center py-16 text-muted-foreground">
-                <CalendarDays className="w-12 h-12 mx-auto mb-4 opacity-30" />
-                <p className="font-medium">No blocked dates</p>
-                <p className="text-sm mt-1">Select dates from the calendar to block</p>
+              <div className="text-center py-10 text-muted-foreground">
+                <CalendarDays className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                <p className="text-sm font-medium">No blocked dates</p>
               </div>
             ) : (
-              <div className="space-y-2 max-h-80 overflow-y-auto pr-2">
+              <div className="space-y-1.5 max-h-64 overflow-y-auto">
                 {blockedDates.map((dateStr) => (
                   <div
                     key={dateStr}
-                    className="flex items-center justify-between p-3 bg-zinc-50 rounded-xl hover:bg-zinc-100 transition-colors group"
+                    className="flex items-center justify-between p-2 bg-zinc-50 rounded-lg group"
                     data-testid={`blocked-date-${dateStr}`}
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-destructive/10 flex items-center justify-center">
-                        <CalendarOff className="w-4 h-4 text-destructive" />
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div className="w-7 h-7 rounded-md bg-destructive/10 flex items-center justify-center shrink-0">
+                        <CalendarOff className="w-3.5 h-3.5 text-destructive" />
                       </div>
-                      <span className="font-medium text-sm">
-                        {format(new Date(dateStr), "EEEE, MMM d, yyyy")}
+                      <span className="font-medium text-xs sm:text-sm truncate">
+                        {format(new Date(dateStr), "MMM d, yyyy")}
                       </span>
                     </div>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive transition-all"
+                      className="h-7 w-7 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive"
                       onClick={() => handleUnblockDate(dateStr)}
                       data-testid={`unblock-${dateStr}`}
                     >
-                      <X className="w-4 h-4" />
+                      <X className="w-3.5 h-3.5" />
                     </Button>
                   </div>
                 ))}

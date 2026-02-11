@@ -3,7 +3,7 @@ import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Plus, Clock, Trash2, Loader2, DollarSign } from "lucide-react";
@@ -34,7 +34,6 @@ const ServicesPage = ({ token, onUpdate }) => {
       });
       setServices(response.data.services || []);
     } catch (error) {
-      console.error("Failed to fetch services:", error);
       toast.error("Failed to load services");
     } finally {
       setLoading(false);
@@ -44,7 +43,7 @@ const ServicesPage = ({ token, onUpdate }) => {
   const handleAddService = async (e) => {
     e.preventDefault();
     if (!newService.name || !newService.duration) {
-      toast.error("Please fill in required fields");
+      toast.error("Fill in required fields");
       return;
     }
 
@@ -65,15 +64,14 @@ const ServicesPage = ({ token, onUpdate }) => {
       fetchServices();
       if (onUpdate) onUpdate();
     } catch (error) {
-      console.error("Failed to add service:", error);
-      toast.error(error.response?.data?.detail || "Failed to add service");
+      toast.error("Failed to add service");
     } finally {
       setSubmitting(false);
     }
   };
 
   const handleDeleteService = async (serviceId) => {
-    if (!window.confirm("Are you sure you want to delete this service?")) return;
+    if (!window.confirm("Delete this service?")) return;
 
     try {
       await axios.delete(`${API}/admin/services/${serviceId}`, {
@@ -83,100 +81,89 @@ const ServicesPage = ({ token, onUpdate }) => {
       fetchServices();
       if (onUpdate) onUpdate();
     } catch (error) {
-      console.error("Failed to delete service:", error);
-      toast.error("Failed to delete service");
+      toast.error("Failed to delete");
     }
   };
 
   return (
-    <div className="space-y-6 max-w-3xl" data-testid="services-page">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4" data-testid="services-page">
+      <div className="flex items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold font-heading">Services</h1>
-          <p className="text-muted-foreground text-sm mt-1">Manage what you offer</p>
+          <h1 className="text-xl sm:text-2xl font-bold font-heading">Services</h1>
+          <p className="text-muted-foreground text-sm">What you offer</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="rounded-lg shadow-lg shadow-primary/20" data-testid="add-service-button">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Service
+            <Button size="sm" className="shrink-0" data-testid="add-service-button">
+              <Plus className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">Add</span>
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-md">
+          <DialogContent className="max-w-[calc(100vw-2rem)] sm:max-w-md">
             <DialogHeader>
-              <DialogTitle className="font-heading">Add New Service</DialogTitle>
-              <DialogDescription>
-                Create a service that customers can book
-              </DialogDescription>
+              <DialogTitle className="font-heading">Add Service</DialogTitle>
+              <DialogDescription>Create a bookable service</DialogDescription>
             </DialogHeader>
-            <form onSubmit={handleAddService} className="space-y-4 mt-4" data-testid="add-service-form">
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-sm font-medium">Service Name</Label>
+            <form onSubmit={handleAddService} className="space-y-4 mt-2">
+              <div>
+                <Label htmlFor="name" className="text-sm">Name</Label>
                 <Input
                   id="name"
-                  placeholder="e.g., Haircut, Consultation"
+                  placeholder="e.g., Haircut"
                   value={newService.name}
                   onChange={(e) => setNewService({ ...newService, name: e.target.value })}
-                  className="h-11 rounded-lg"
+                  className="h-10 mt-1"
                   required
                   data-testid="service-name-input"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="duration" className="text-sm font-medium">Duration (min)</Label>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label htmlFor="duration" className="text-sm">Duration (min)</Label>
                   <Input
                     id="duration"
                     type="number"
                     min="15"
                     step="15"
-                    placeholder="30"
                     value={newService.duration}
                     onChange={(e) => setNewService({ ...newService, duration: e.target.value })}
-                    className="h-11 rounded-lg"
+                    className="h-10 mt-1"
                     required
                     data-testid="service-duration-input"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="price" className="text-sm font-medium">Price ($)</Label>
+                <div>
+                  <Label htmlFor="price" className="text-sm">Price ($)</Label>
                   <Input
                     id="price"
                     type="number"
                     min="0"
                     step="0.01"
-                    placeholder="0.00"
+                    placeholder="0"
                     value={newService.price}
                     onChange={(e) => setNewService({ ...newService, price: e.target.value })}
-                    className="h-11 rounded-lg"
+                    className="h-10 mt-1"
                     data-testid="service-price-input"
                   />
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="description" className="text-sm font-medium">Description (optional)</Label>
+              <div>
+                <Label htmlFor="description" className="text-sm">Description</Label>
                 <Input
                   id="description"
                   placeholder="Brief description"
                   value={newService.description}
                   onChange={(e) => setNewService({ ...newService, description: e.target.value })}
-                  className="h-11 rounded-lg"
+                  className="h-10 mt-1"
                   data-testid="service-description-input"
                 />
               </div>
-              <DialogFooter className="gap-2 sm:gap-0">
-                <Button type="button" variant="outline" onClick={() => setDialogOpen(false)} className="rounded-lg">
+              <DialogFooter className="gap-2">
+                <Button type="button" variant="outline" size="sm" onClick={() => setDialogOpen(false)}>
                   Cancel
                 </Button>
-                <Button type="submit" disabled={submitting} className="rounded-lg" data-testid="submit-service-button">
-                  {submitting ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Adding...
-                    </>
-                  ) : (
-                    "Add Service"
-                  )}
+                <Button type="submit" size="sm" disabled={submitting} data-testid="submit-service-button">
+                  {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : "Add"}
                 </Button>
               </DialogFooter>
             </form>
@@ -185,39 +172,36 @@ const ServicesPage = ({ token, onUpdate }) => {
       </div>
 
       <Card className="border-0 shadow-sm">
-        <CardContent className="p-6">
+        <CardContent className="p-4">
           {loading ? (
             <div className="space-y-3">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="h-20 bg-zinc-100 rounded-xl animate-pulse" />
+              {[1, 2].map(i => (
+                <div key={i} className="h-16 bg-zinc-100 rounded-lg animate-pulse" />
               ))}
             </div>
           ) : services.length === 0 ? (
-            <div className="text-center py-16 text-muted-foreground">
-              <Clock className="w-12 h-12 mx-auto mb-4 opacity-30" />
-              <p className="font-medium">No services yet</p>
-              <p className="text-sm mt-1">Add your first service to start accepting bookings</p>
+            <div className="text-center py-12 text-muted-foreground">
+              <Clock className="w-10 h-10 mx-auto mb-3 opacity-30" />
+              <p className="text-sm font-medium">No services yet</p>
+              <p className="text-xs mt-1">Add your first service</p>
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-2">
               {services.map((service) => (
                 <div
                   key={service.id}
-                  className="flex items-center justify-between p-4 bg-zinc-50 rounded-xl hover:bg-zinc-100 transition-colors group"
+                  className="flex items-center justify-between p-3 bg-zinc-50 rounded-lg group"
                   data-testid={`service-${service.id}`}
                 >
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-semibold text-foreground">{service.name}</h4>
-                    {service.description && (
-                      <p className="text-sm text-muted-foreground truncate mt-0.5">{service.description}</p>
-                    )}
-                    <div className="flex items-center gap-4 mt-2">
-                      <span className="flex items-center gap-1.5 text-xs text-muted-foreground bg-white px-2 py-1 rounded-md">
+                  <div className="min-w-0 flex-1">
+                    <h4 className="font-medium text-sm truncate">{service.name}</h4>
+                    <div className="flex items-center gap-3 mt-1">
+                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
                         <Clock className="w-3 h-3" />
-                        {service.duration} min
+                        {service.duration}m
                       </span>
                       {service.price && (
-                        <span className="flex items-center gap-1 text-xs font-medium text-foreground bg-white px-2 py-1 rounded-md">
+                        <span className="flex items-center gap-0.5 text-xs font-medium">
                           <DollarSign className="w-3 h-3" />
                           {service.price}
                         </span>
@@ -227,7 +211,7 @@ const ServicesPage = ({ token, onUpdate }) => {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="opacity-0 group-hover:opacity-100 text-destructive hover:text-destructive hover:bg-destructive/10 transition-all"
+                    className="opacity-0 group-hover:opacity-100 h-8 w-8 text-destructive hover:text-destructive"
                     onClick={() => handleDeleteService(service.id)}
                     data-testid={`delete-service-${service.id}`}
                   >
