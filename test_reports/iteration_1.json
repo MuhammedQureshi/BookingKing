@@ -1,0 +1,74 @@
+{
+  "summary": "Comprehensive testing of embeddable booking widget system completed. Both backend APIs and frontend components are working correctly with full end-to-end booking flow functional.",
+  
+  "backend_issues": {
+    "critical_bugs": [],
+    "flaky_endpoints": [
+      {
+        "endpoint": "/api/admin/register",
+        "issue": "Returns 400 for demo business (already exists)",
+        "impact": "Expected behavior - demo business registration handled gracefully",
+        "fix_priority": "LOW",
+        "note": "This is intentional behavior, system properly falls back to login"
+      }
+    ]
+  },
+
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+
+  "passed_tests": [
+    "Demo page loads successfully with booking widget",
+    "Service selection step works (found 4 services)",
+    "Date selection with calendar works (13 available dates found)",
+    "Time slot selection displays available slots (16 slots found)",
+    "Customer details form submission works",
+    "Booking confirmation flow completed successfully",
+    "Admin login page loads and functions",
+    "Admin login with demo credentials works",
+    "Admin dashboard shows bookings (2 bookings displayed)",
+    "Admin services page - add service functionality works",
+    "Admin services page - service management interface",
+    "Admin availability page loads with weekly schedule",
+    "Admin blocked dates page accessible",
+    "Backend API: POST /api/admin/login (200 OK)",
+    "Backend API: GET /api/businesses/{id} (200 OK)",
+    "Backend API: GET /api/businesses/{id}/slots (200 OK)",
+    "Backend API: POST /api/bookings (200 OK)",
+    "Backend API: GET /api/admin/bookings (200 OK)",
+    "Backend API: POST /api/admin/services (200 OK)",
+    "Backend API: PUT /api/admin/availability (200 OK)",
+    "Backend API: POST /api/admin/blocked-dates (200 OK)",
+    "Backend API: DELETE /api/admin/blocked-dates/{date} (200 OK)",
+    "Backend API: POST /api/admin/register (200 OK for new business)",
+    "Backend API: DELETE /api/admin/services/{id} (200 OK)",
+    "End-to-end booking flow: Service → Date → Time → Details → Confirmation",
+    "Email functionality properly mocked (no API key configured)",
+    "Business ID display and copy functionality",
+    "Widget embed code generation",
+    "Admin panel navigation between sections"
+  ],
+
+  "test_report_links": [
+    "/app/backend_test.py",
+    "/app/backend_test_results.json"
+  ],
+
+  "success_percentage": {
+    "backend": "92% (12/13 API endpoints working - 1 expected behavior)",
+    "frontend": "100% (all UI components and flows working)",
+    "overall": "96%"
+  },
+
+  "updated_files": [
+    "/app/backend_test.py"
+  ],
+
+  "action_item_for_main_agent": "",
+
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_test_itself": true
+}
