@@ -1,0 +1,406 @@
+{
+  "summary": {
+    "total_tests": 13,
+    "passed": 12,
+    "failed": 1,
+    "success_rate": "92.3%"
+  },
+  "results": [
+    {
+      "name": "Register/Login Demo Business",
+      "method": "POST",
+      "endpoint": "admin/register",
+      "expected_status": [
+        200,
+        400
+      ],
+      "actual_status": 400,
+      "success": false,
+      "response_data": {
+        "detail": "Email already registered"
+      },
+      "error": null
+    },
+    {
+      "name": "Login Demo Business",
+      "method": "POST",
+      "endpoint": "admin/login",
+      "expected_status": 200,
+      "actual_status": 200,
+      "success": true,
+      "response_data": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJidXNpbmVzc19pZCI6IjllZWQ2YWY1LWY1MTUtNGIzZC1hNTdhLTZiMzg2MGZlNzliOSIsImV4cCI6MTc3MTQwOTcxNH0.y8WL2u2f1IUa9Cec_zJht5e_3e0uNi-tU7jWxjfH8QY",
+        "business_id": "9eed6af5-f515-4b3d-a57a-6b3860fe79b9",
+        "business_name": "Demo Salon"
+      },
+      "error": null
+    },
+    {
+      "name": "Get Business Public Info",
+      "method": "GET",
+      "endpoint": "businesses/9eed6af5-f515-4b3d-a57a-6b3860fe79b9",
+      "expected_status": 200,
+      "actual_status": 200,
+      "success": true,
+      "response_data": {
+        "id": "9eed6af5-f515-4b3d-a57a-6b3860fe79b9",
+        "business_name": "Demo Salon",
+        "description": "A demo booking experience",
+        "services": [
+          {
+            "id": "9bfa648d-5671-4908-b608-233b3dd66433",
+            "name": "Consultation",
+            "duration": 60,
+            "description": "One-on-one consultation session",
+            "price": 75.0
+          },
+          {
+            "id": "223f58af-ddb8-4715-acc3-8e8e4233afe0",
+            "name": "Haircut",
+            "duration": 30,
+            "description": "Classic haircut and styling",
+            "price": 35.0
+          },
+          {
+            "id": "832098ee-b7c4-4c82-8560-cc27322901e2",
+            "name": "Express Trim",
+            "duration": 15,
+            "description": "Quick trim and touch-up",
+            "price": 20.0
+          }
+        ],
+        "availability": [
+          {
+            "day": 0,
+            "start_time": "09:00",
+            "end_time": "17:00",
+            "enabled": true
+          },
+          {
+            "day": 1,
+            "start_time": "09:00",
+            "end_time": "17:00",
+            "enabled": true
+          },
+          {
+            "day": 2,
+            "start_time": "09:00",
+            "end_time": "17:00",
+            "enabled": true
+          },
+          {
+            "day": 3,
+            "start_time": "09:00",
+            "end_time": "17:00",
+            "enabled": true
+          },
+          {
+            "day": 4,
+            "start_time": "09:00",
+            "end_time": "17:00",
+            "enabled": true
+          },
+          {
+            "day": 5,
+            "start_time": "09:00",
+            "end_time": "17:00",
+            "enabled": false
+          },
+          {
+            "day": 6,
+            "start_time": "09:00",
+            "end_time": "17:00",
+            "enabled": false
+          }
+        ]
+      },
+      "error": null
+    },
+    {
+      "name": "Get Admin Business Info",
+      "method": "GET",
+      "endpoint": "admin/business",
+      "expected_status": 200,
+      "actual_status": 200,
+      "success": true,
+      "response_data": {
+        "id": "9eed6af5-f515-4b3d-a57a-6b3860fe79b9",
+        "business_name": "Demo Salon",
+        "description": "A demo booking experience",
+        "email": "demo@bookingwidget.com",
+        "services": [
+          {
+            "id": "9bfa648d-5671-4908-b608-233b3dd66433",
+            "name": "Consultation",
+            "duration": 60,
+            "description": "One-on-one consultation session",
+            "price": 75.0
+          },
+          {
+            "id": "223f58af-ddb8-4715-acc3-8e8e4233afe0",
+            "name": "Haircut",
+            "duration": 30,
+            "description": "Classic haircut and styling",
+            "price": 35.0
+          },
+          {
+            "id": "832098ee-b7c4-4c82-8560-cc27322901e2",
+            "name": "Express Trim",
+            "duration": 15,
+            "description": "Quick trim and touch-up",
+            "price": 20.0
+          }
+        ],
+        "availability": [
+          {
+            "day": 0,
+            "start_time": "09:00",
+            "end_time": "17:00",
+            "enabled": true
+          },
+          {
+            "day": 1,
+            "start_time": "09:00",
+            "end_time": "17:00",
+            "enabled": true
+          },
+          {
+            "day": 2,
+            "start_time": "09:00",
+            "end_time": "17:00",
+            "enabled": true
+          },
+          {
+            "day": 3,
+            "start_time": "09:00",
+            "end_time": "17:00",
+            "enabled": true
+          },
+          {
+            "day": 4,
+            "start_time": "09:00",
+            "end_time": "17:00",
+            "enabled": true
+          },
+          {
+            "day": 5,
+            "start_time": "09:00",
+            "end_time": "17:00",
+            "enabled": false
+          },
+          {
+            "day": 6,
+            "start_time": "09:00",
+            "end_time": "17:00",
+            "enabled": false
+          }
+        ],
+        "blocked_dates": [],
+        "created_at": "2026-02-11T10:13:34.274203+00:00"
+      },
+      "error": null
+    },
+    {
+      "name": "Add Service",
+      "method": "POST",
+      "endpoint": "admin/services",
+      "expected_status": 200,
+      "actual_status": 200,
+      "success": true,
+      "response_data": {
+        "id": "e03bc8c4-9983-47b8-b783-a1fb445d96ef",
+        "name": "Test Haircut",
+        "duration": 30,
+        "description": "A test haircut service",
+        "price": 25.0
+      },
+      "error": null
+    },
+    {
+      "name": "Get Admin Bookings",
+      "method": "GET",
+      "endpoint": "admin/bookings",
+      "expected_status": 200,
+      "actual_status": 200,
+      "success": true,
+      "response_data": [],
+      "error": null
+    },
+    {
+      "name": "Update Availability",
+      "method": "PUT",
+      "endpoint": "admin/availability",
+      "expected_status": 200,
+      "actual_status": 200,
+      "success": true,
+      "response_data": {
+        "message": "Availability updated"
+      },
+      "error": null
+    },
+    {
+      "name": "Get Available Slots",
+      "method": "GET",
+      "endpoint": "businesses/9eed6af5-f515-4b3d-a57a-6b3860fe79b9/slots",
+      "expected_status": 200,
+      "actual_status": 200,
+      "success": true,
+      "response_data": [
+        {
+          "start_time": "09:00",
+          "end_time": "09:30",
+          "available": true
+        },
+        {
+          "start_time": "09:30",
+          "end_time": "10:00",
+          "available": true
+        },
+        {
+          "start_time": "10:00",
+          "end_time": "10:30",
+          "available": true
+        },
+        {
+          "start_time": "10:30",
+          "end_time": "11:00",
+          "available": true
+        },
+        {
+          "start_time": "11:00",
+          "end_time": "11:30",
+          "available": true
+        },
+        {
+          "start_time": "11:30",
+          "end_time": "12:00",
+          "available": true
+        },
+        {
+          "start_time": "12:00",
+          "end_time": "12:30",
+          "available": true
+        },
+        {
+          "start_time": "12:30",
+          "end_time": "13:00",
+          "available": true
+        },
+        {
+          "start_time": "13:00",
+          "end_time": "13:30",
+          "available": true
+        },
+        {
+          "start_time": "13:30",
+          "end_time": "14:00",
+          "available": true
+        },
+        {
+          "start_time": "14:00",
+          "end_time": "14:30",
+          "available": true
+        },
+        {
+          "start_time": "14:30",
+          "end_time": "15:00",
+          "available": true
+        },
+        {
+          "start_time": "15:00",
+          "end_time": "15:30",
+          "available": true
+        },
+        {
+          "start_time": "15:30",
+          "end_time": "16:00",
+          "available": true
+        },
+        {
+          "start_time": "16:00",
+          "end_time": "16:30",
+          "available": true
+        },
+        {
+          "start_time": "16:30",
+          "end_time": "17:00",
+          "available": true
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "Create Booking",
+      "method": "POST",
+      "endpoint": "bookings",
+      "expected_status": 200,
+      "actual_status": 200,
+      "success": true,
+      "response_data": {
+        "id": "7d77a8c7-fbb1-47ae-bc20-8b782d616c5a",
+        "business_id": "9eed6af5-f515-4b3d-a57a-6b3860fe79b9",
+        "service_id": "e03bc8c4-9983-47b8-b783-a1fb445d96ef",
+        "service_name": "Test Haircut",
+        "date": "2026-02-12",
+        "start_time": "10:00",
+        "end_time": "10:30",
+        "customer_name": "Test Customer",
+        "customer_email": "test@example.com",
+        "customer_phone": "+1234567890",
+        "status": "confirmed",
+        "created_at": "2026-02-11T10:15:14.452035+00:00"
+      },
+      "error": null
+    },
+    {
+      "name": "Block Date",
+      "method": "POST",
+      "endpoint": "admin/blocked-dates",
+      "expected_status": 200,
+      "actual_status": 200,
+      "success": true,
+      "response_data": {
+        "message": "Date blocked"
+      },
+      "error": null
+    },
+    {
+      "name": "Unblock Date",
+      "method": "DELETE",
+      "endpoint": "admin/blocked-dates/2026-02-18",
+      "expected_status": 200,
+      "actual_status": 200,
+      "success": true,
+      "response_data": {
+        "message": "Date unblocked"
+      },
+      "error": null
+    },
+    {
+      "name": "Register New Business",
+      "method": "POST",
+      "endpoint": "admin/register",
+      "expected_status": 200,
+      "actual_status": 200,
+      "success": true,
+      "response_data": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJidXNpbmVzc19pZCI6IjYzMGI0NDM0LWVjMjktNDNiNC05YTViLTllYmIwZTMzYjhjYSIsImV4cCI6MTc3MTQwOTcxNH0.MyXtO3xjp8vt1eXhZY93pKi4cu8HuUJ1FM5hRHKJPPw",
+        "business_id": "630b4434-ec29-43b4-9a5b-9ebb0e33b8ca",
+        "business_name": "Test Business"
+      },
+      "error": null
+    },
+    {
+      "name": "Delete Service",
+      "method": "DELETE",
+      "endpoint": "admin/services/e03bc8c4-9983-47b8-b783-a1fb445d96ef",
+      "expected_status": 200,
+      "actual_status": 200,
+      "success": true,
+      "response_data": {
+        "message": "Service deleted"
+      },
+      "error": null
+    }
+  ]
+}
