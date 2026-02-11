@@ -1,0 +1,27 @@
+{
+  "summary": "Completed comprehensive testing of embed script functionality for booking widget. All core features working correctly.",
+  "backend_issues": {},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "passed_tests": [
+    "AppointlyWidget global API exposure",
+    "AppointlyWidget.init() creates widget in container",
+    "AppointlyWidget.destroy() removes widget",
+    "MutationObserver waits for delayed containers (React/Next.js support)",
+    "Full booking flow works in embedded widget",
+    "Async script loading works correctly",
+    "Multiple widget instances can coexist",
+    "Error handling for invalid business IDs",
+    "Auto-initialization from script tag attributes",
+    "Widget styling and theming with custom colors"
+  ],
+  "test_report_links": ["/app/embed_test.html", "/app/async_embed_test.html"],
+  "action_item_for_main_agent": "",
+  "updated_files": ["/app/embed_test.html", "/app/async_embed_test.html"],
+  "success_percentage": "100% - All embed script features working correctly",
+  "should_call_test_agent_after_fix": "false",
+  "should_main_agent_test_itself": "false"
+}
