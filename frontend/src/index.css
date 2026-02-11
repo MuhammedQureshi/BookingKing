@@ -1,20 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
     margin: 0;
-    font-family:
-        -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-        sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-    font-family:
-        source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
 @layer base {
@@ -44,6 +43,10 @@ code {
         --chart-4: 43 74% 66%;
         --chart-5: 27 87% 67%;
         --radius: 0.5rem;
+        --widget-primary: 0 0% 9%;
+        --success: 160 84% 39%;
+        --warning: 38 92% 50%;
+        --info: 217 91% 60%;
     }
     .dark {
         --background: 0 0% 3.9%;
@@ -82,34 +85,67 @@ code {
     }
 }
 
+/* Widget Scoped Styles */
+.ebs-widget {
+    font-family: 'Inter', sans-serif;
+    --ebs-primary: var(--widget-primary, 0 0% 9%);
+}
+
+.ebs-widget h1,
+.ebs-widget h2,
+.ebs-widget h3,
+.ebs-widget h4 {
+    font-family: 'Manrope', sans-serif;
+}
+
+.ebs-widget .ebs-btn-primary {
+    background-color: hsl(var(--ebs-primary));
+    color: hsl(var(--primary-foreground));
+}
+
+.ebs-widget .ebs-btn-primary:hover {
+    opacity: 0.9;
+}
+
+/* Calendar custom styles */
+.ebs-widget .rdp-day_selected {
+    background-color: hsl(var(--ebs-primary)) !important;
+}
+
+/* Time slot animations */
+.ebs-time-slot {
+    transition: all 0.2s ease;
+}
+
+.ebs-time-slot:hover:not(:disabled) {
+    transform: translateY(-2px);
+}
+
+/* Step transition animations */
+.ebs-step-enter {
+    opacity: 0;
+    transform: translateX(20px);
+}
+
+.ebs-step-enter-active {
+    opacity: 1;
+    transform: translateX(0);
+    transition: all 0.3s ease;
+}
+
+.ebs-step-exit {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.ebs-step-exit-active {
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.3s ease;
+}
+
 @layer base {
     [data-debug-wrapper="true"] {
         display: contents !important;
-    }
-
-    [data-debug-wrapper="true"] > * {
-        margin-left: inherit;
-        margin-right: inherit;
-        margin-top: inherit;
-        margin-bottom: inherit;
-        padding-left: inherit;
-        padding-right: inherit;
-        padding-top: inherit;
-        padding-bottom: inherit;
-        column-gap: inherit;
-        row-gap: inherit;
-        gap: inherit;
-        border-left-width: inherit;
-        border-right-width: inherit;
-        border-top-width: inherit;
-        border-bottom-width: inherit;
-        border-left-style: inherit;
-        border-right-style: inherit;
-        border-top-style: inherit;
-        border-bottom-style: inherit;
-        border-left-color: inherit;
-        border-right-color: inherit;
-        border-top-color: inherit;
-        border-bottom-color: inherit;
     }
 }

@@ -1,34 +1,103 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
-}
+/* App CSS - Main styles for the application */
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
-}
-
-.App-header {
-    background-color: #0f0f10;
+.App {
     min-height: 100vh;
+}
+
+/* Admin Layout Styles */
+.admin-layout {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+    min-height: 100vh;
 }
 
-.App-link {
-    color: #61dafb;
+.admin-sidebar {
+    width: 260px;
+    background-color: hsl(var(--card));
+    border-right: 1px solid hsl(var(--border));
+    padding: 1.5rem 1rem;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
+.admin-main {
+    flex: 1;
+    margin-left: 260px;
+    padding: 2rem;
+    background-color: hsl(var(--background));
+}
+
+@media (max-width: 768px) {
+    .admin-sidebar {
+        display: none;
     }
-    to {
-        transform: rotate(360deg);
+    .admin-main {
+        margin-left: 0;
     }
+}
+
+/* Demo page styles */
+.demo-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding: 2rem;
+}
+
+.demo-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.demo-header h1 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: hsl(var(--foreground));
+    margin-bottom: 0.5rem;
+}
+
+.demo-header p {
+    color: hsl(var(--muted-foreground));
+    font-size: 1.125rem;
+}
+
+/* Widget container shadow */
+.widget-shadow {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}
+
+/* Loading skeleton */
+.skeleton {
+    background: linear-gradient(90deg, hsl(var(--muted)) 25%, hsl(var(--secondary)) 50%, hsl(var(--muted)) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Success animation */
+@keyframes checkmark {
+    0% {
+        stroke-dashoffset: 100;
+    }
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+.success-checkmark path {
+    stroke-dasharray: 100;
+    animation: checkmark 0.6s ease-in-out forwards;
+}
+
+/* Button active state */
+.btn-press:active {
+    transform: scale(0.95);
 }
