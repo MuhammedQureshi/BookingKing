@@ -1,9 +1,9 @@
 {
   "summary": {
     "total_tests": 13,
-    "passed": 12,
-    "failed": 1,
-    "success_rate": "92.3%"
+    "passed": 11,
+    "failed": 2,
+    "success_rate": "84.6%"
   },
   "results": [
     {
@@ -29,7 +29,7 @@
       "actual_status": 200,
       "success": true,
       "response_data": {
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJidXNpbmVzc19pZCI6IjllZWQ2YWY1LWY1MTUtNGIzZC1hNTdhLTZiMzg2MGZlNzliOSIsImV4cCI6MTc3MTQwOTcxNH0.y8WL2u2f1IUa9Cec_zJht5e_3e0uNi-tU7jWxjfH8QY",
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJidXNpbmVzc19pZCI6IjllZWQ2YWY1LWY1MTUtNGIzZC1hNTdhLTZiMzg2MGZlNzliOSIsImV4cCI6MTc3MTQ0NDM1M30.DR6c8US6SwAWqYLyg7Ads_tfpGeAysfsiwDk4f7vx6c",
         "business_id": "9eed6af5-f515-4b3d-a57a-6b3860fe79b9",
         "business_name": "Demo Salon"
       },
@@ -67,6 +67,13 @@
             "duration": 15,
             "description": "Quick trim and touch-up",
             "price": 20.0
+          },
+          {
+            "id": "956fb5ee-1c74-4436-a61c-4a3908dc5667",
+            "name": "Test Service",
+            "duration": 45,
+            "description": "A test service for automation",
+            "price": 50.0
           }
         ],
         "availability": [
@@ -102,14 +109,14 @@
           },
           {
             "day": 5,
-            "start_time": "09:00",
-            "end_time": "17:00",
+            "start_time": "10:00",
+            "end_time": "16:00",
             "enabled": false
           },
           {
             "day": 6,
-            "start_time": "09:00",
-            "end_time": "17:00",
+            "start_time": "10:00",
+            "end_time": "16:00",
             "enabled": false
           }
         ]
@@ -149,6 +156,13 @@
             "duration": 15,
             "description": "Quick trim and touch-up",
             "price": 20.0
+          },
+          {
+            "id": "956fb5ee-1c74-4436-a61c-4a3908dc5667",
+            "name": "Test Service",
+            "duration": 45,
+            "description": "A test service for automation",
+            "price": 50.0
           }
         ],
         "availability": [
@@ -184,14 +198,14 @@
           },
           {
             "day": 5,
-            "start_time": "09:00",
-            "end_time": "17:00",
+            "start_time": "10:00",
+            "end_time": "16:00",
             "enabled": false
           },
           {
             "day": 6,
-            "start_time": "09:00",
-            "end_time": "17:00",
+            "start_time": "10:00",
+            "end_time": "16:00",
             "enabled": false
           }
         ],
@@ -208,7 +222,7 @@
       "actual_status": 200,
       "success": true,
       "response_data": {
-        "id": "e03bc8c4-9983-47b8-b783-a1fb445d96ef",
+        "id": "b215e858-5cf6-4d66-9b0d-70c4cb8699c1",
         "name": "Test Haircut",
         "duration": 30,
         "description": "A test haircut service",
@@ -223,7 +237,36 @@
       "expected_status": 200,
       "actual_status": 200,
       "success": true,
-      "response_data": [],
+      "response_data": [
+        {
+          "id": "7d77a8c7-fbb1-47ae-bc20-8b782d616c5a",
+          "business_id": "9eed6af5-f515-4b3d-a57a-6b3860fe79b9",
+          "service_id": "e03bc8c4-9983-47b8-b783-a1fb445d96ef",
+          "service_name": "Test Haircut",
+          "date": "2026-02-12",
+          "start_time": "10:00",
+          "end_time": "10:30",
+          "customer_name": "Test Customer",
+          "customer_email": "test@example.com",
+          "customer_phone": "+1234567890",
+          "status": "confirmed",
+          "created_at": "2026-02-11T10:15:14.452035+00:00"
+        },
+        {
+          "id": "df2e0195-0a27-49af-89a0-61a54ebd1569",
+          "business_id": "9eed6af5-f515-4b3d-a57a-6b3860fe79b9",
+          "service_id": "223f58af-ddb8-4715-acc3-8e8e4233afe0",
+          "service_name": "Haircut",
+          "date": "2026-02-11",
+          "start_time": "09:00",
+          "end_time": "09:30",
+          "customer_name": "Test User",
+          "customer_email": "test@example.com",
+          "customer_phone": "+1234567890",
+          "status": "confirmed",
+          "created_at": "2026-02-11T10:18:04.302678+00:00"
+        }
+      ],
       "error": null
     },
     {
@@ -259,7 +302,7 @@
         {
           "start_time": "10:00",
           "end_time": "10:30",
-          "available": true
+          "available": false
         },
         {
           "start_time": "10:30",
@@ -334,21 +377,10 @@
       "method": "POST",
       "endpoint": "bookings",
       "expected_status": 200,
-      "actual_status": 200,
-      "success": true,
+      "actual_status": 400,
+      "success": false,
       "response_data": {
-        "id": "7d77a8c7-fbb1-47ae-bc20-8b782d616c5a",
-        "business_id": "9eed6af5-f515-4b3d-a57a-6b3860fe79b9",
-        "service_id": "e03bc8c4-9983-47b8-b783-a1fb445d96ef",
-        "service_name": "Test Haircut",
-        "date": "2026-02-12",
-        "start_time": "10:00",
-        "end_time": "10:30",
-        "customer_name": "Test Customer",
-        "customer_email": "test@example.com",
-        "customer_phone": "+1234567890",
-        "status": "confirmed",
-        "created_at": "2026-02-11T10:15:14.452035+00:00"
+        "detail": "Time slot not available"
       },
       "error": null
     },
@@ -384,8 +416,8 @@
       "actual_status": 200,
       "success": true,
       "response_data": {
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJidXNpbmVzc19pZCI6IjYzMGI0NDM0LWVjMjktNDNiNC05YTViLTllYmIwZTMzYjhjYSIsImV4cCI6MTc3MTQwOTcxNH0.MyXtO3xjp8vt1eXhZY93pKi4cu8HuUJ1FM5hRHKJPPw",
-        "business_id": "630b4434-ec29-43b4-9a5b-9ebb0e33b8ca",
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJidXNpbmVzc19pZCI6IjA4OGYzMjMwLTAzNGUtNGNlMi1hZWI0LTA4MThmYWRiZGZhYyIsImV4cCI6MTc3MTQ0NDM1NH0.yAzP3zVJYYRZr3runtL0yZD9eVIdqmLxy8FlSbTur9E",
+        "business_id": "088f3230-034e-4ce2-aeb4-0818fadbdfac",
         "business_name": "Test Business"
       },
       "error": null
@@ -393,7 +425,7 @@
     {
       "name": "Delete Service",
       "method": "DELETE",
-      "endpoint": "admin/services/e03bc8c4-9983-47b8-b783-a1fb445d96ef",
+      "endpoint": "admin/services/b215e858-5cf6-4d66-9b0d-70c4cb8699c1",
       "expected_status": 200,
       "actual_status": 200,
       "success": true,
