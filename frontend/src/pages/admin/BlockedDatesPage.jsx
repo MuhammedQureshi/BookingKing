@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { CalendarOff, X, Plus } from "lucide-react";
+import { CalendarOff, X, Plus, CalendarDays } from "lucide-react";
 import { format, isBefore, startOfDay } from "date-fns";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -45,7 +45,7 @@ const BlockedDatesPage = ({ token, business, onUpdate }) => {
 
       setBlockedDates([...blockedDates, dateStr].sort());
       setSelectedDate(null);
-      toast.success("Date blocked successfully");
+      toast.success("Date blocked!");
       if (onUpdate) onUpdate();
     } catch (error) {
       console.error("Failed to block date:", error);
@@ -78,33 +78,33 @@ const BlockedDatesPage = ({ token, business, onUpdate }) => {
 
   if (loading) {
     return (
-      <div className="space-y-6" data-testid="blocked-dates-page-loading">
+      <div className="space-y-6 max-w-4xl" data-testid="blocked-dates-page-loading">
         <div>
-          <h1 className="text-2xl font-bold font-['Manrope']">Blocked Dates</h1>
-          <p className="text-muted-foreground">Block specific dates when you're not available</p>
+          <h1 className="text-2xl font-bold font-heading">Blocked Dates</h1>
+          <p className="text-muted-foreground text-sm mt-1">Block dates when you're unavailable</p>
         </div>
         <div className="grid lg:grid-cols-2 gap-6">
-          <div className="h-80 bg-muted/50 rounded-lg animate-pulse" />
-          <div className="h-80 bg-muted/50 rounded-lg animate-pulse" />
+          <div className="h-80 bg-zinc-100 rounded-xl animate-pulse" />
+          <div className="h-80 bg-zinc-100 rounded-xl animate-pulse" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6" data-testid="blocked-dates-page">
+    <div className="space-y-6 max-w-4xl" data-testid="blocked-dates-page">
       <div>
-        <h1 className="text-2xl font-bold font-['Manrope']">Blocked Dates</h1>
-        <p className="text-muted-foreground">Block specific dates when you're not available</p>
+        <h1 className="text-2xl font-bold font-heading">Blocked Dates</h1>
+        <p className="text-muted-foreground text-sm mt-1">Block dates when you're unavailable</p>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Calendar */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Select Date to Block</CardTitle>
+        <Card className="border-0 shadow-sm">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg font-heading">Select Date</CardTitle>
             <CardDescription>
-              Click on a date to select it, then click "Block Date"
+              Click a date to select it for blocking
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -121,17 +121,36 @@ const BlockedDatesPage = ({ token, business, onUpdate }) => {
                   blocked: { 
                     backgroundColor: "hsl(var(--destructive))", 
                     color: "hsl(var(--destructive-foreground))",
-                    borderRadius: "50%"
+                    borderRadius: "8px"
                   }
                 }}
-                className="rounded-lg border p-3"
+                className="rounded-xl border-0 p-0"
+                classNames={{
+                  months: "space-y-4",
+                  month: "space-y-4",
+                  caption: "flex justify-center pt-1 relative items-center",
+                  caption_label: "text-sm font-semibold",
+                  nav: "space-x-1 flex items-center",
+                  nav_button: "h-8 w-8 bg-transparent p-0 opacity-50 hover:opacity-100 hover:bg-zinc-100 rounded-lg transition-all",
+                  nav_button_previous: "absolute left-1",
+                  nav_button_next: "absolute right-1",
+                  table: "w-full border-collapse",
+                  head_row: "flex",
+                  head_cell: "text-muted-foreground rounded-md w-10 font-normal text-[0.8rem]",
+                  row: "flex w-full mt-1",
+                  cell: "h-10 w-10 text-center text-sm p-0 relative",
+                  day: "h-10 w-10 p-0 font-normal aria-selected:opacity-100 hover:bg-zinc-100 rounded-lg transition-all",
+                  day_selected: "bg-primary text-primary-foreground hover:bg-primary",
+                  day_today: "bg-zinc-100 text-foreground",
+                  day_disabled: "text-muted-foreground opacity-50",
+                }}
                 data-testid="blocked-dates-calendar"
               />
             </div>
             <Button
               onClick={handleBlockDate}
               disabled={!selectedDate}
-              className="w-full rounded-full"
+              className="w-full rounded-lg"
               data-testid="block-date-button"
             >
               <Plus className="w-4 h-4 mr-2" />
@@ -141,38 +160,40 @@ const BlockedDatesPage = ({ token, business, onUpdate }) => {
         </Card>
 
         {/* Blocked Dates List */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Blocked Dates</CardTitle>
+        <Card className="border-0 shadow-sm">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg font-heading">Blocked Dates</CardTitle>
             <CardDescription>
               {blockedDates.length} date{blockedDates.length !== 1 ? 's' : ''} blocked
             </CardDescription>
           </CardHeader>
           <CardContent>
             {blockedDates.length === 0 ? (
-              <div className="text-center py-12 text-muted-foreground">
-                <CalendarOff className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>No blocked dates</p>
-                <p className="text-sm">Select dates from the calendar to block them</p>
+              <div className="text-center py-16 text-muted-foreground">
+                <CalendarDays className="w-12 h-12 mx-auto mb-4 opacity-30" />
+                <p className="font-medium">No blocked dates</p>
+                <p className="text-sm mt-1">Select dates from the calendar to block</p>
               </div>
             ) : (
-              <div className="space-y-2 max-h-80 overflow-y-auto">
+              <div className="space-y-2 max-h-80 overflow-y-auto pr-2">
                 {blockedDates.map((dateStr) => (
                   <div
                     key={dateStr}
-                    className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
+                    className="flex items-center justify-between p-3 bg-zinc-50 rounded-xl hover:bg-zinc-100 transition-colors group"
                     data-testid={`blocked-date-${dateStr}`}
                   >
-                    <div className="flex items-center gap-2">
-                      <CalendarOff className="w-4 h-4 text-muted-foreground" />
-                      <span className="font-medium">
-                        {format(new Date(dateStr), "EEEE, MMMM d, yyyy")}
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-destructive/10 flex items-center justify-center">
+                        <CalendarOff className="w-4 h-4 text-destructive" />
+                      </div>
+                      <span className="font-medium text-sm">
+                        {format(new Date(dateStr), "EEEE, MMM d, yyyy")}
                       </span>
                     </div>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                      className="h-8 w-8 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive transition-all"
                       onClick={() => handleUnblockDate(dateStr)}
                       data-testid={`unblock-${dateStr}`}
                     >
