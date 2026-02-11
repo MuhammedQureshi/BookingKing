@@ -1,0 +1,150 @@
+{
+  "project_name": "Embeddable Booking System",
+  "design_philosophy": {
+    "identity": "E1: The Anti-AI Designer",
+    "core_principles": [
+      "Fusion over Imitation: Mix swiss minimalism with soft utility.",
+      "Content is King: The booking flow is a narrative.",
+      "Negative Space: Generous padding to prevent claustrophobia in widgets.",
+      "Mobile First: The widget must be thumb-friendly."
+    ],
+    "anti_patterns": [
+      "No generic centered layouts without tension.",
+      "No default 'Inter' for headings.",
+      "No gradient overload.",
+      "No clutter - every pixel must serve the booking conversion."
+    ]
+  },
+  "typography": {
+    "font_family": {
+      "headings": "Manrope, sans-serif",
+      "body": "Inter, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "scale": {
+      "h1": "text-4xl md:text-5xl font-bold tracking-tight",
+      "h2": "text-3xl md:text-4xl font-semibold tracking-tight",
+      "h3": "text-2xl md:text-3xl font-semibold",
+      "h4": "text-xl md:text-2xl font-medium",
+      "body_lg": "text-lg leading-relaxed",
+      "body_base": "text-base leading-relaxed",
+      "caption": "text-sm text-muted-foreground",
+      "label": "text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+    },
+    "installation": "Ensure Manrope and Inter are imported via Google Fonts in index.html or CSS."
+  },
+  "colors": {
+    "palette_name": "Neutral Swiss Utility",
+    "mode": "Light Mode Dominant (Dark Mode Optional)",
+    "primary": {
+      "default": "#18181b",
+      "description": "A deep zinc/black for high contrast. Customizable by user.",
+      "variable": "var(--primary)"
+    },
+    "base": {
+      "background": "#ffffff",
+      "foreground": "#09090b",
+      "card": "#ffffff",
+      "border": "#e4e4e7"
+    },
+    "status": {
+      "success": "#10b981",
+      "error": "#ef4444",
+      "warning": "#f59e0b",
+      "info": "#3b82f6"
+    },
+    "widget_specific": {
+      "bg": "white",
+      "surface": "#fafafa",
+      "active_slot": "var(--primary)",
+      "active_text": "white",
+      "disabled_slot": "#f4f4f5"
+    }
+  },
+  "layout_strategies": {
+    "widget": {
+      "type": "Mobile-First Stack",
+      "container": "max-w-[480px] w-full mx-auto bg-card rounded-xl shadow-xl overflow-hidden border border-border/50",
+      "spacing": "p-6 md:p-8",
+      "steps": "Vertical progression or Slide-over cards",
+      "isolation": "Use scoped CSS modules or specific class prefixes (e.g., 'ebs-') to prevent style bleeding."
+    },
+    "admin": {
+      "type": "Dashboard Grid",
+      "structure": "Sidebar (fixed left) + Main Content (scrollable)",
+      "grid": "grid grid-cols-1 md:grid-cols-12 gap-6",
+      "card_style": "bg-card border border-border rounded-lg p-6"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-primary text-primary-foreground hover:opacity-90 h-11 px-8 rounded-full font-medium transition-all active:scale-95",
+      "secondary": "bg-secondary text-secondary-foreground hover:bg-secondary/80 h-11 px-8 rounded-full font-medium",
+      "ghost": "hover:bg-accent hover:text-accent-foreground h-11 px-4 rounded-full"
+    },
+    "inputs": {
+      "default": "h-11 rounded-lg border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+      "date_picker": "Custom Shadcn Calendar with generous padding and clear selected states"
+    },
+    "cards": {
+      "service_card": "group relative flex items-center p-4 border rounded-xl hover:border-primary/50 hover:bg-accent/50 transition-all cursor-pointer space-x-4",
+      "slot_card": "flex flex-col items-center justify-center p-3 border rounded-lg hover:border-primary hover:bg-primary/5 hover:text-primary transition-all cursor-pointer text-sm font-medium"
+    },
+    "feedback": {
+      "toast": "Use Sonner for all success/error messages",
+      "loading": "Skeleton loaders matching the shape of content (not generic spinners)"
+    }
+  },
+  "visual_enhancers": {
+    "shadows": "shadow-lg for the widget container, shadow-sm for cards. Avoid heavy dropshadows.",
+    "borders": "1px solid border-border. Use border-primary for active states.",
+    "radius": "rounded-xl for containers, rounded-lg for inner elements, rounded-full for buttons.",
+    "motion": "Use framer-motion for step transitions (slide-in from right, fade out to left)."
+  },
+  "images": {
+    "categories": {
+      "services": {
+        "barber": "https://images.unsplash.com/photo-1759134198561-e2041049419c",
+        "consulting": "https://images.unsplash.com/photo-1551135049-8a33b5883817",
+        "spa": "https://images.unsplash.com/photo-1649751295468-953038600bef"
+      }
+    },
+    "usage_rules": "Use these images for default service placeholders or demo data. All images must have alt text."
+  },
+  "accessibility": {
+    "contrast": "Ensure 4.5:1 contrast for text. Use APCA guidelines.",
+    "keyboard": "Full keyboard navigation support for the calendar and time slots.",
+    "aria": "ARIA labels on all icon-only buttons. data-testid on all interactive elements."
+  },
+  "instructions_to_main_agent": {
+    "widget_implementation": [
+      "Build the widget as a standalone component that can be mounted anywhere.",
+      "Use 'Manrope' for the widget headings to give it character.",
+      "Ensure the calendar is touch-friendly (44px min tap target).",
+      "The 'Book' button must be sticky at the bottom on mobile."
+    ],
+    "admin_implementation": [
+      "Use Shadcn layout components.",
+      "Keep the design dense but legible (Data density mode).",
+      "Use 'Inter' for the admin interface for maximum readability."
+    ],
+    "general": [
+      "Follow the E1 'Fusion over Imitation' rule - don't make it look like a default Bootstrap site.",
+      "Use the 'Neutral Swiss Utility' palette.",
+      "Implement 'Sonner' for toasts.",
+      "Ensure all inputs have clear focus states."
+    ]
+  },
+  "universal_guidelines": {
+    "do_not": [
+      "Do not use generic 'blue' (#3b82f6) as the primary unless overridden.",
+      "Do not use gradients for the background of the widget.",
+      "Do not center text in the form inputs."
+    ],
+    "must": [
+      "Must use 'data-testid' for all interactive elements.",
+      "Must use 'lucide-react' for icons.",
+      "Must support mobile responsive layouts (stack on small screens)."
+    ]
+  }
+}
