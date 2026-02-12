@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embed Widget Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-controls {
+            margin: 10px 0;
+        }
+        button {
+            margin: 5px;
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            background: #007cba;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #005a87;
+        }
+        #status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <h1>Appointly Embed Widget Testing</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Auto-initialized Widget</h2>
+        <p>This widget should initialize automatically from script tag attributes:</p>
+        <div id="booking-widget" style="min-height: 400px; border: 1px dashed #ccc;"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: Manual API Control</h2>
+        <div class="test-controls">
+            <button onclick="initManualWidget()" data-testid="init-manual-widget">Initialize Widget</button>
+            <button onclick="destroyManualWidget()" data-testid="destroy-manual-widget">Destroy Widget</button>
+            <button onclick="checkGlobalAPI()" data-testid="check-global-api">Check Global API</button>
+        </div>
+        <div id="manual-widget" style="min-height: 400px; border: 1px dashed #ccc;"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: Delayed Container (React Simulation)</h2>
+        <div class="test-controls">
+            <button onclick="testDelayedContainer()" data-testid="test-delayed-container">Test Delayed Container</button>
+            <button onclick="clearDelayedTest()" data-testid="clear-delayed-test">Clear Test</button>
+        </div>
+        <div id="delayed-container" style="min-height: 400px; border: 1px dashed #ccc;">
+            <p>Container will be added after delay to simulate React/Next.js behavior</p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Status</h2>
+        <div id="status" class="info">Ready to test...</div>
+    </div>
+
+    <!-- Load the embed script with auto-init data -->
+    <script 
+        src="https://reserve-js.preview.emergentagent.com/booking-embed.js" 
+        data-business-id="9eed6af5-f515-4b3d-a57a-6b3860fe79b9"
+        data-primary-color="#18181b"
+        data-container="booking-widget">
+    </script>
+
+    <script>
+        function updateStatus(message, type = 'info') {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = type;
+        }
+
+        function checkGlobalAPI() {
+            if (window.AppointlyWidget) {
+                updateStatus('✅ AppointlyWidget global API is available', 'success');
+                console.log('AppointlyWidget API:', window.AppointlyWidget);
+            } else {
+                updateStatus('❌ AppointlyWidget global API not found', 'error');
+            }
+        }
+
+        function initManualWidget() {
+            if (!window.AppointlyWidget) {
+                updateStatus('❌ AppointlyWidget not available', 'error');
+                return;
+            }
+
+            try {
+                window.AppointlyWidget.init({
+                    businessId: '9eed6af5-f515-4b3d-a57a-6b3860fe79b9',
+                    container: 'manual-widget',
+                    primaryColor: '#e11d48'
+                });
+                updateStatus('✅ Manual widget initialized', 'success');
+            } catch (error) {
+                updateStatus('❌ Error initializing widget: ' + error.message, 'error');
+            }
+        }
+
+        function destroyManualWidget() {
+            if (!window.AppointlyWidget) {
+                updateStatus('❌ AppointlyWidget not available', 'error');
+                return;
+            }
+
+            try {
+                window.AppointlyWidget.destroy('manual-widget');
+                updateStatus('✅ Manual widget destroyed', 'success');
+            } catch (error) {
+                updateStatus('❌ Error destroying widget: ' + error.message, 'error');
+            }
+        }
+
+        function testDelayedContainer() {
+            // Clear existing content
+            const container = document.getElementById('delayed-container');
+            container.innerHTML = '<p>Initializing widget, waiting for container...</p>';
+            
+            // Initialize widget (should wait for container)
+            if (window.AppointlyWidget) {
+                window.AppointlyWidget.init({
+                    businessId: '9eed6af5-f515-4b3d-a57a-6b3860fe79b9',
+                    container: 'delayed-widget',
+                    primaryColor: '#16a34a'
+                });
+                
+                updateStatus('🔄 Widget waiting for delayed container...', 'info');
+                
+                // Add container after delay (simulating React mount)
+                setTimeout(() => {
+                    const delayedDiv = document.createElement('div');
+                    delayedDiv.id = 'delayed-widget';
+                    delayedDiv.style.minHeight = '400px';
+                    delayedDiv.style.border = '2px solid #16a34a';
+                    container.appendChild(delayedDiv);
+                    updateStatus('✅ Delayed container added - widget should appear', 'success');
+                }, 2000);
+            } else {
+                updateStatus('❌ AppointlyWidget not available', 'error');
+            }
+        }
+
+        function clearDelayedTest() {
+            const container = document.getElementById('delayed-container');
+            container.innerHTML = '<p>Container cleared. Ready for next test.</p>';
+            
+            if (window.AppointlyWidget) {
+                window.AppointlyWidget.destroy('delayed-widget');
+            }
+            updateStatus('✅ Delayed test cleared', 'info');
+        }
+
+        // Check API availability on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                checkGlobalAPI();
+            }, 1000);
+        });
+
+        // Listen for console errors
+        window.addEventListener('error', (e) => {
+            updateStatus('❌ JavaScript Error: ' + e.message, 'error');
+        });
+    </script>
+</body>
+</html>

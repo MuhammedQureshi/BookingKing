@@ -1,0 +1,237 @@
+{
+  "summary": {
+    "total_tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "success_rate": "100.0%",
+    "issues_found": 0
+  },
+  "issues": [],
+  "detailed_results": [
+    {
+      "name": "Embed Script Accessibility",
+      "method": "GET",
+      "endpoint": "booking-embed.js",
+      "expected_status": 200,
+      "actual_status": 200,
+      "success": true,
+      "response_data": "/**\n * Appointly - Embeddable Booking Widget\n * \n * Usage:\n * <div id=\"booking-widget\"></div>\n * <script \n *   src=\"https://your-domain.com/booking-embed.js\" \n *   data-business-id=\"YOUR_BUSINESS_ID\"\n *   data-primary-color=\"#18181b\">\n * </script>\n */\n\n(function() {\n  'use strict';\n\n  // Find our sc...",
+      "error": null,
+      "details": "Size: 25599 chars, Contains widget: True, Vanilla JS: True"
+    },
+    {
+      "name": "CORS Preflight Request",
+      "method": "OPTIONS",
+      "endpoint": "businesses/9eed6af5-f515-4b3d-a57a-6b3860fe79b9",
+      "expected_status": [
+        200,
+        204
+      ],
+      "actual_status": 200,
+      "success": true,
+      "response_data": null,
+      "error": null,
+      "details": "Allow-Origin: https://external-website.com, Allow-Methods: DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT"
+    },
+    {
+      "name": "Get Test Business Public Info",
+      "method": "GET",
+      "endpoint": "businesses/9eed6af5-f515-4b3d-a57a-6b3860fe79b9",
+      "expected_status": 200,
+      "actual_status": 200,
+      "success": true,
+      "response_data": {
+        "id": "9eed6af5-f515-4b3d-a57a-6b3860fe79b9",
+        "business_name": "Demo Salon",
+        "description": "A demo booking experience",
+        "services": [
+          {
+            "id": "9bfa648d-5671-4908-b608-233b3dd66433",
+            "name": "Consultation",
+            "duration": 60,
+            "description": "One-on-one consultation session",
+            "price": 75.0
+          },
+          {
+            "id": "223f58af-ddb8-4715-acc3-8e8e4233afe0",
+            "name": "Haircut",
+            "duration": 30,
+            "description": "Classic haircut and styling",
+            "price": 35.0
+          },
+          {
+            "id": "832098ee-b7c4-4c82-8560-cc27322901e2",
+            "name": "Express Trim",
+            "duration": 15,
+            "description": "Quick trim and touch-up",
+            "price": 20.0
+          },
+          {
+            "id": "956fb5ee-1c74-4436-a61c-4a3908dc5667",
+            "name": "Test Service",
+            "duration": 45,
+            "description": "A test service for automation",
+            "price": 50.0
+          }
+        ],
+        "availability": [
+          {
+            "day": 0,
+            "start_time": "09:00",
+            "end_time": "17:00",
+            "enabled": true
+          },
+          {
+            "day": 1,
+            "start_time": "09:00",
+            "end_time": "17:00",
+            "enabled": true
+          },
+          {
+            "day": 2,
+            "start_time": "09:00",
+            "end_time": "17:00",
+            "enabled": true
+          },
+          {
+            "day": 3,
+            "start_time": "09:00",
+            "end_time": "17:00",
+            "enabled": true
+          },
+          {
+            "day": 4,
+            "start_time": "09:00",
+            "end_time": "17:00",
+            "enabled": true
+          },
+          {
+            "day": 5,
+            "start_time": "10:00",
+            "end_time": "16:00",
+            "enabled": false
+          },
+          {
+            "day": 6,
+            "start_time": "10:00",
+            "end_time": "16:00",
+            "enabled": false
+          }
+        ]
+      },
+      "error": null,
+      "details": "CORS headers: {'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': None, 'Access-Control-Allow-Headers': None}"
+    },
+    {
+      "name": "Get Available Slots",
+      "method": "GET",
+      "endpoint": "businesses/9eed6af5-f515-4b3d-a57a-6b3860fe79b9/slots",
+      "expected_status": 200,
+      "actual_status": 200,
+      "success": true,
+      "response_data": [
+        {
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "available": true
+        },
+        {
+          "start_time": "09:30",
+          "end_time": "10:30",
+          "available": false
+        },
+        {
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "available": false
+        },
+        {
+          "start_time": "10:30",
+          "end_time": "11:30",
+          "available": true
+        },
+        {
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "available": true
+        },
+        {
+          "start_time": "11:30",
+          "end_time": "12:30",
+          "available": true
+        },
+        {
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "available": true
+        },
+        {
+          "start_time": "12:30",
+          "end_time": "13:30",
+          "available": true
+        },
+        {
+          "start_time": "13:00",
+          "end_time": "14:00",
+          "available": true
+        },
+        {
+          "start_time": "13:30",
+          "end_time": "14:30",
+          "available": true
+        },
+        {
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "available": true
+        },
+        {
+          "start_time": "14:30",
+          "end_time": "15:30",
+          "available": true
+        },
+        {
+          "start_time": "15:00",
+          "end_time": "16:00",
+          "available": true
+        },
+        {
+          "start_time": "15:30",
+          "end_time": "16:30",
+          "available": true
+        },
+        {
+          "start_time": "16:00",
+          "end_time": "17:00",
+          "available": true
+        }
+      ],
+      "error": null,
+      "details": "CORS headers: {'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': None, 'Access-Control-Allow-Headers': None}"
+    },
+    {
+      "name": "Create Test Booking",
+      "method": "POST",
+      "endpoint": "bookings",
+      "expected_status": 200,
+      "actual_status": 200,
+      "success": true,
+      "response_data": {
+        "id": "db5779c5-10b9-4429-bd53-8ddf55b5b287",
+        "business_id": "9eed6af5-f515-4b3d-a57a-6b3860fe79b9",
+        "service_id": "9bfa648d-5671-4908-b608-233b3dd66433",
+        "service_name": "Consultation",
+        "date": "2026-02-12",
+        "start_time": "09:00",
+        "end_time": "10:00",
+        "customer_name": "Test Customer",
+        "customer_email": "test@example.com",
+        "customer_phone": "+1234567890",
+        "status": "confirmed",
+        "created_at": "2026-02-11T20:04:14.348891+00:00"
+      },
+      "error": null,
+      "details": "CORS headers: {'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': None, 'Access-Control-Allow-Headers': None}"
+    }
+  ]
+}

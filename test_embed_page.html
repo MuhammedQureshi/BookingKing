@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>External Website - Booking Widget Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 500px;
+            gap: 30px;
+            align-items: start;
+        }
+        .info {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .widget-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>External Website Test</h1>
+        <p>Testing the embeddable booking widget from an external domain perspective</p>
+    </div>
+
+    <div class="content">
+        <div class="info">
+            <h2>About This Test</h2>
+            <p>This page simulates how the booking widget would appear on an external website. The widget should load and function properly despite being embedded from a different domain.</p>
+            
+            <h3>Expected Features:</h3>
+            <ul>
+                <li>✓ Widget loads without errors</li>
+                <li>✓ Displays business data (Demo Salon)</li>
+                <li>✓ Service selection works</li>
+                <li>✓ Date selection works</li>
+                <li>✓ Time slot selection works</li>
+                <li>✓ Booking form submission works</li>
+                <li>✓ CORS headers allow cross-origin requests</li>
+            </ul>
+
+            <h3>Test Business Details:</h3>
+            <p><strong>Business ID:</strong> 9eed6af5-f515-4b3d-a57a-6b3860fe79b9</p>
+            <p><strong>API Base:</strong> https://reserve-js.preview.emergentagent.com</p>
+        </div>
+
+        <div class="widget-container">
+            <h3>Booking Widget</h3>
+            <!-- Widget will be embedded here -->
+            <div id="booking-widget"></div>
+        </div>
+    </div>
+
+    <!-- Embed the booking widget -->
+    <script 
+        src="https://reserve-js.preview.emergentagent.com/booking-embed.js" 
+        data-business-id="9eed6af5-f515-4b3d-a57a-6b3860fe79b9"
+        data-primary-color="#667eea">
+    </script>
+
+    <script>
+        // Add some logging to help with testing
+        window.addEventListener('error', function(e) {
+            console.error('Page Error:', e.error);
+        });
+
+        // Log when script loads
+        console.log('External website page loaded');
+        console.log('Booking widget should be initializing...');
+    </script>
+</body>
+</html>

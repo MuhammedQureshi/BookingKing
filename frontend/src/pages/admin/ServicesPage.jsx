@@ -3,10 +3,10 @@ import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Plus, Clock, Trash2, Loader2 } from "lucide-react";
+import { Plus, Clock, Trash2, Loader2, DollarSign } from "lucide-react";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -34,7 +34,6 @@ const ServicesPage = ({ token, onUpdate }) => {
       });
       setServices(response.data.services || []);
     } catch (error) {
-      console.error("Failed to fetch services:", error);
       toast.error("Failed to load services");
     } finally {
       setLoading(false);
@@ -44,7 +43,7 @@ const ServicesPage = ({ token, onUpdate }) => {
   const handleAddService = async (e) => {
     e.preventDefault();
     if (!newService.name || !newService.duration) {
-      toast.error("Please fill in required fields");
+      toast.error("Fill in required fields");
       return;
     }
 
@@ -59,21 +58,20 @@ const ServicesPage = ({ token, onUpdate }) => {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      toast.success("Service added successfully");
+      toast.success("Service added!");
       setDialogOpen(false);
       setNewService({ name: "", duration: 30, description: "", price: "" });
       fetchServices();
       if (onUpdate) onUpdate();
     } catch (error) {
-      console.error("Failed to add service:", error);
-      toast.error(error.response?.data?.detail || "Failed to add service");
+      toast.error("Failed to add service");
     } finally {
       setSubmitting(false);
     }
   };
 
   const handleDeleteService = async (serviceId) => {
-    if (!window.confirm("Are you sure you want to delete this service?")) return;
+    if (!window.confirm("Delete this service?")) return;
 
     try {
       await axios.delete(`${API}/admin/services/${serviceId}`, {
@@ -83,94 +81,89 @@ const ServicesPage = ({ token, onUpdate }) => {
       fetchServices();
       if (onUpdate) onUpdate();
     } catch (error) {
-      console.error("Failed to delete service:", error);
-      toast.error("Failed to delete service");
+      toast.error("Failed to delete");
     }
   };
 
   return (
-    <div className="space-y-6" data-testid="services-page">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4" data-testid="services-page">
+      <div className="flex items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold font-['Manrope']">Services</h1>
-          <p className="text-muted-foreground">Manage the services you offer</p>
+          <h1 className="text-xl sm:text-2xl font-bold font-heading">Services</h1>
+          <p className="text-muted-foreground text-sm">What you offer</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="rounded-full" data-testid="add-service-button">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Service
+            <Button size="sm" className="shrink-0" data-testid="add-service-button">
+              <Plus className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">Add</span>
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-w-[calc(100vw-2rem)] sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>Add New Service</DialogTitle>
-              <DialogDescription>
-                Create a new service that customers can book
-              </DialogDescription>
+              <DialogTitle className="font-heading">Add Service</DialogTitle>
+              <DialogDescription>Create a bookable service</DialogDescription>
             </DialogHeader>
-            <form onSubmit={handleAddService} className="space-y-4" data-testid="add-service-form">
-              <div className="space-y-2">
-                <Label htmlFor="name">Service Name *</Label>
+            <form onSubmit={handleAddService} className="space-y-4 mt-2">
+              <div>
+                <Label htmlFor="name" className="text-sm">Name</Label>
                 <Input
                   id="name"
                   placeholder="e.g., Haircut"
                   value={newService.name}
                   onChange={(e) => setNewService({ ...newService, name: e.target.value })}
+                  className="h-10 mt-1"
                   required
                   data-testid="service-name-input"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="duration">Duration (minutes) *</Label>
-                <Input
-                  id="duration"
-                  type="number"
-                  min="15"
-                  step="15"
-                  placeholder="30"
-                  value={newService.duration}
-                  onChange={(e) => setNewService({ ...newService, duration: e.target.value })}
-                  required
-                  data-testid="service-duration-input"
-                />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label htmlFor="duration" className="text-sm">Duration (min)</Label>
+                  <Input
+                    id="duration"
+                    type="number"
+                    min="15"
+                    step="15"
+                    value={newService.duration}
+                    onChange={(e) => setNewService({ ...newService, duration: e.target.value })}
+                    className="h-10 mt-1"
+                    required
+                    data-testid="service-duration-input"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="price" className="text-sm">Price ($)</Label>
+                  <Input
+                    id="price"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder="0"
+                    value={newService.price}
+                    onChange={(e) => setNewService({ ...newService, price: e.target.value })}
+                    className="h-10 mt-1"
+                    data-testid="service-price-input"
+                  />
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+              <div>
+                <Label htmlFor="description" className="text-sm">Description</Label>
                 <Input
                   id="description"
-                  placeholder="Brief description of the service"
+                  placeholder="Brief description"
                   value={newService.description}
                   onChange={(e) => setNewService({ ...newService, description: e.target.value })}
+                  className="h-10 mt-1"
                   data-testid="service-description-input"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="price">Price ($)</Label>
-                <Input
-                  id="price"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  placeholder="0.00"
-                  value={newService.price}
-                  onChange={(e) => setNewService({ ...newService, price: e.target.value })}
-                  data-testid="service-price-input"
-                />
-              </div>
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
+              <DialogFooter className="gap-2">
+                <Button type="button" variant="outline" size="sm" onClick={() => setDialogOpen(false)}>
                   Cancel
                 </Button>
-                <Button type="submit" disabled={submitting} data-testid="submit-service-button">
-                  {submitting ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Adding...
-                    </>
-                  ) : (
-                    "Add Service"
-                  )}
+                <Button type="submit" size="sm" disabled={submitting} data-testid="submit-service-button">
+                  {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : "Add"}
                 </Button>
               </DialogFooter>
             </form>
@@ -178,47 +171,47 @@ const ServicesPage = ({ token, onUpdate }) => {
         </Dialog>
       </div>
 
-      <Card>
-        <CardContent className="p-6">
+      <Card className="border-0 shadow-sm">
+        <CardContent className="p-4">
           {loading ? (
-            <div className="space-y-4">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="h-20 bg-muted/50 rounded-lg animate-pulse" />
+            <div className="space-y-3">
+              {[1, 2].map(i => (
+                <div key={i} className="h-16 bg-zinc-100 rounded-lg animate-pulse" />
               ))}
             </div>
           ) : services.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
-              <Clock className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No services yet</p>
-              <p className="text-sm">Add your first service to start accepting bookings</p>
+              <Clock className="w-10 h-10 mx-auto mb-3 opacity-30" />
+              <p className="text-sm font-medium">No services yet</p>
+              <p className="text-xs mt-1">Add your first service</p>
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-2">
               {services.map((service) => (
                 <div
                   key={service.id}
-                  className="flex items-center justify-between p-4 border rounded-lg"
+                  className="flex items-center justify-between p-3 bg-zinc-50 rounded-lg group"
                   data-testid={`service-${service.id}`}
                 >
-                  <div>
-                    <h4 className="font-medium">{service.name}</h4>
-                    {service.description && (
-                      <p className="text-sm text-muted-foreground">{service.description}</p>
-                    )}
-                    <div className="flex items-center gap-3 mt-1 text-sm text-muted-foreground">
-                      <span className="flex items-center gap-1">
+                  <div className="min-w-0 flex-1">
+                    <h4 className="font-medium text-sm truncate">{service.name}</h4>
+                    <div className="flex items-center gap-3 mt-1">
+                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
                         <Clock className="w-3 h-3" />
-                        {service.duration} min
+                        {service.duration}m
                       </span>
                       {service.price && (
-                        <span className="font-medium text-foreground">${service.price}</span>
+                        <span className="flex items-center gap-0.5 text-xs font-medium">
+                          <DollarSign className="w-3 h-3" />
+                          {service.price}
+                        </span>
                       )}
                     </div>
                   </div>
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                    className="opacity-0 group-hover:opacity-100 h-8 w-8 text-destructive hover:text-destructive"
                     onClick={() => handleDeleteService(service.id)}
                     data-testid={`delete-service-${service.id}`}
                   >
