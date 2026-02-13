@@ -50,16 +50,18 @@ export const BookingWidget = ({ businessId, primaryColor }) => {
   });
 
   useEffect(() => {
-    fetchBusiness();
-  }, [businessId]);
+  fetchBusiness();
+  }, [fetchBusiness]);
+
 
   useEffect(() => {
-    if (selectedDate && selectedService) {
-      fetchSlots();
-    }
-  }, [selectedDate, selectedService]);
+  if (selectedDate && selectedService) {
+    fetchSlots();
+  }
+  }, [selectedDate, selectedService, fetchSlots]);
 
-  const fetchBusiness = async () => {
+
+  const fetchBusiness = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axios.get(`${API}/businesses/${businessId}`);
@@ -70,11 +72,12 @@ export const BookingWidget = ({ businessId, primaryColor }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [businessId]);
 
-  const fetchSlots = async () => {
+
+  const fetchSlots = useCallback(async () => {
     if (!selectedDate || !selectedService) return;
-    
+
     try {
       setSlotsLoading(true);
       const dateStr = format(selectedDate, "yyyy-MM-dd");
@@ -88,7 +91,8 @@ export const BookingWidget = ({ businessId, primaryColor }) => {
     } finally {
       setSlotsLoading(false);
     }
-  };
+  }, [selectedDate, selectedService, businessId]);
+
 
   const handleServiceSelect = (service) => {
     setSelectedService(service);
