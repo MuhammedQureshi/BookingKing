@@ -214,9 +214,6 @@ const BookingsView = ({ token }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchBookings();
-  }, []);
-
   const fetchBookings = async () => {
     try {
       const response = await axios.get(`${API}/admin/bookings`, {
@@ -230,6 +227,9 @@ const BookingsView = ({ token }) => {
       setLoading(false);
     }
   };
+
+  fetchBookings();
+}, [token]);
 
   const handleCancel = async (bookingId) => {
     if (!window.confirm("Cancel this booking?")) return;
