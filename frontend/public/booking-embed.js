@@ -13,7 +13,7 @@
 (function(window, document) {
   'use strict';
 
-  var API_BASE = 'https://reserve-js.preview.emergentagent.com/api';
+  var API_BASE = 'bookingking-production-3843.up.railway.app';
   var STYLE_ID = 'appointly-widget-css';
   var instances = {};
 
