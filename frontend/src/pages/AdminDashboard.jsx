@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { Routes, Route, Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
@@ -40,28 +41,33 @@ const AdminDashboard = () => {
   const businessName = localStorage.getItem("booking_business_name");
 
   useEffect(() => {
-    if (!token) {
-      navigate("/admin/login");
-      return;
-    }
-    fetchBusiness();
-  }, [token, navigate]);
+  if (!token) {
+    navigate("/admin/login");
+    return;
+  }
 
-  const fetchBusiness = async () => {
-    try {
-      const response = await axios.get(`${API}/admin/business`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setBusiness(response.data);
-    } catch (error) {
-      console.error("Failed to fetch business:", error);
-      if (error.response?.status === 401) {
-        handleLogout();
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+  fetchBusiness();
+}, [token, navigate, fetchBusiness]);
+
+
+  useEffect(() => {
+  fetchBusiness();
+}, [fetchBusiness]);
+
+
+  const fetchBusiness = useCallback(async () => {
+  try {
+    setLoading(true);
+    const response = await axios.get(`${API}/businesses/${businessId}`);
+    setBusiness(response.data);
+  } catch (error) {
+    console.error("Failed to fetch business:", error);
+    toast.error("Failed to load booking information");
+  } finally {
+    setLoading(false);
+  }
+}, [businessId]);
+
 
   const handleLogout = () => {
     localStorage.removeItem("booking_token");
