@@ -24,9 +24,6 @@ const ServicesPage = ({ token, onUpdate }) => {
   });
 
   useEffect(() => {
-    fetchServices();
-  }, []);
-
   const fetchServices = async () => {
     try {
       const response = await axios.get(`${API}/admin/business`, {
@@ -39,6 +36,10 @@ const ServicesPage = ({ token, onUpdate }) => {
       setLoading(false);
     }
   };
+
+  fetchServices();
+}, [token]);
+
 
   const handleAddService = async (e) => {
     e.preventDefault();
