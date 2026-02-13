@@ -13,7 +13,7 @@
 (function(window, document) {
   'use strict';
 
-  var API_BASE = 'bookingking-production-3843.up.railway.app/api';
+  var API_BASE = 'https://bookingking-production-3843.up.railway.app/api';
   var STYLE_ID = 'appointly-widget-css';
   var instances = {};
 
