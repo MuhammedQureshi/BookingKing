@@ -40,22 +40,7 @@ const AdminDashboard = () => {
   const businessId = localStorage.getItem("booking_business_id");
   const businessName = localStorage.getItem("booking_business_name");
 
-  useEffect(() => {
-  if (!token) {
-    navigate("/admin/login");
-    return;
-  }
-
-  fetchBusiness();
-}, [token, navigate, fetchBusiness]);
-
-
-  useEffect(() => {
-  fetchBusiness();
-}, [fetchBusiness]);
-
-
-  const fetchBusiness = useCallback(async () => {
+    const fetchBusiness = useCallback(async () => {
   try {
     setLoading(true);
     const response = await axios.get(`${API}/businesses/${businessId}`);
@@ -68,6 +53,13 @@ const AdminDashboard = () => {
   }
 }, [businessId]);
 
+    useEffect(() => {
+    if (!token) {
+      navigate("/admin/login");
+      return;
+    }
+    fetchBusiness();
+  }, [token, navigate, fetchBusiness]);
 
   const handleLogout = () => {
     localStorage.removeItem("booking_token");
