@@ -458,13 +458,18 @@ async def remove_blocked_date(date: str, business_id: str = Depends(get_current_
 # Include the router in the main app
 app.include_router(api_router)
 
+# Add CORS FIRST
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_origins=["*"],  # temporarily allow all for debugging
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# THEN include router
+app.include_router(api_router)
+
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
