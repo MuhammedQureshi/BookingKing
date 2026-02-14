@@ -461,11 +461,12 @@ app.include_router(api_router)
 # Add CORS FIRST
 app.add_middleware(
     CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=["*"],  # temporarily allow all for debugging
+    allow_origins=["*"],
+    allow_credentials=False,  # MUST be false with "*"
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # THEN include router
 app.include_router(api_router)
