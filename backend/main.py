@@ -41,14 +41,13 @@ app = FastAPI(title="Embeddable Booking System API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",
-        "http://localhost:3000",
         "https://booking-king-alpha.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 
 # ===================== DATABASE =====================
