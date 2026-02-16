@@ -70,6 +70,13 @@ async def login_admin(data: dict):
 
 app.include_router(api_router)
 
+
+@api_router.get("/admin/bookings")
+async def get_admin_bookings():
+    # Example: return all bookings (replace with your actual logic)
+    bookings = list(db.bookings.find({}, {"_id": 0}))
+    return bookings
+
 # ==============================
 # Shutdown Event
 # ==============================
