@@ -1,61 +1,109 @@
 from fastapi import FastAPI, APIRouter, HTTPException, Depends, Header
 from fastapi.middleware.cors import CORSMiddleware
-from pymongo import MongoClient
-from pydantic import BaseModel, EmailStr
-from typing import Optional, List
+from dotenv import load_dotenv
+from motor.motor_asyncio import AsyncIOMotorClient
 import os
+import logging
+import asyncio
+from pathlib import Path
+from pydantic import BaseModel, Field, EmailStr, ConfigDict
+from typing import List, Optional
 import uuid
-import bcrypt
+from datetime import datetime, timezone, timedelta
 import jwt
-from datetime import datetime, timedelta, timezone
+import bcrypt
+import resend
 
-# ==============================
-# Environment
-# ==============================
+# ===================== LOAD ENV =====================
 
-MONGO_URL = os.getenv("MONGO_URL")
-DB_NAME = os.getenv("DB_NAME", "bookingking")
-JWT_SECRET = os.getenv("JWT_SECRET", "super-secret-key")
+ROOT_DIR = Path(__file__).parent
+load_dotenv(ROOT_DIR / ".env")
+
+# ===================== CONFIG =====================
+
+MONGO_URL = os.environ["MONGO_URL"]
+DB_NAME = os.environ["DB_NAME"]
+
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
+SENDER_EMAIL = os.environ.get("SENDER_EMAIL", "onboarding@resend.dev")
+
+JWT_SECRET = os.environ.get("JWT_SECRET", "booking-widget-secret-key-2024")
 JWT_ALGORITHM = "HS256"
 
-# ==============================
-# App Initialization
-# ==============================
+if RESEND_API_KEY:
+    resend.api_key = RESEND_API_KEY
+
+# ===================== APP =====================
 
 app = FastAPI(title="Embeddable Booking System API")
 
-# ==============================
-# CORS (MUST COME FIRST)
-# ==============================
-
+# ✅ CORS MUST COME BEFORE ROUTER
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://booking-king-alpha.vercel.app",
-        "http://localhost:3000",
-        "http://localhost:5173",
-    ],
     allow_credentials=True,
+    allow_origins=os.environ.get("CORS_ORIGINS", "*").split(","),
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ==============================
-# Database Setup
-# ==============================
+# ===================== DATABASE =====================
 
-client = MongoClient(MONGO_URL)
+client = AsyncIOMotorClient(MONGO_URL)
 db = client[DB_NAME]
 
-# ==============================
-# Router
-# ==============================
+# ===================== ROUTER =====================
 
 api_router = APIRouter(prefix="/api")
 
-# ==============================
-# Models
-# ==============================
+# ===================== LOGGING =====================
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# ===================== MODELS =====================
+
+class Service(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    duration: int
+    description: Optional[str] = ""
+    price: Optional[float] = None
+
+class WeeklyAvailability(BaseModel):
+    day: int
+    start_time: str
+    end_time: str
+    enabled: bool = True
+
+class Business(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    business_name: str
+    description: Optional[str] = ""
+    email: EmailStr
+    password_hash: str
+    services: List[Service] = []
+    availability: List[WeeklyAvailability] = []
+    blocked_dates: List[str] = []
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+class Booking(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    business_id: str
+    service_id: str
+    service_name: str
+    date: str
+    start_time: str
+    end_time: str
+    customer_name: str
+    customer_email: EmailStr
+    customer_phone: str
+    status: str = "confirmed"
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+# ===================== REQUEST MODELS =====================
 
 class BusinessCreate(BaseModel):
     business_name: str
@@ -67,100 +115,119 @@ class LoginRequest(BaseModel):
     email: EmailStr
     password: str
 
-class Service(BaseModel):
-    id: str
+class LoginResponse(BaseModel):
+    token: str
+    business_id: str
+    business_name: str
+
+class ServiceCreate(BaseModel):
     name: str
     duration: int
+    description: Optional[str] = ""
     price: Optional[float] = None
 
-class Booking(BaseModel):
-    id: str
+class AvailabilityUpdate(BaseModel):
+    availability: List[WeeklyAvailability]
+
+class BlockedDateRequest(BaseModel):
+    date: str
+
+class BookingCreate(BaseModel):
     business_id: str
     service_id: str
-    service_name: str
     date: str
     start_time: str
-    end_time: str
     customer_name: str
     customer_email: EmailStr
+    customer_phone: str
 
-# ==============================
-# Helpers
-# ==============================
+class TimeSlot(BaseModel):
+    start_time: str
+    end_time: str
+    available: bool
 
-def hash_password(password: str):
+# ===================== AUTH HELPERS =====================
+
+def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
-def verify_password(password: str, hashed: str):
+def verify_password(password: str, hashed: str) -> bool:
     return bcrypt.checkpw(password.encode(), hashed.encode())
 
-def create_token(business_id: str):
+def create_token(business_id: str) -> str:
     payload = {
         "business_id": business_id,
         "exp": datetime.now(timezone.utc) + timedelta(days=7),
     }
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
-def get_current_business(authorization: str = Header(None)):
+async def get_current_business(authorization: str = Header(None)) -> str:
     if not authorization or not authorization.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Missing token")
+        raise HTTPException(status_code=401, detail="Missing or invalid token")
 
     token = authorization.split(" ")[1]
 
     try:
         payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
         return payload["business_id"]
-    except:
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
+    except jwt.InvalidTokenError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-# ==============================
-# Health Check
-# ==============================
+# ===================== EMAIL =====================
 
-@api_router.get("/health")
-async def health():
-    return {"status": "ok"}
+async def send_booking_confirmation(booking: Booking, business: dict):
+    if not RESEND_API_KEY:
+        return
 
-# ==============================
-# Admin Register
-# ==============================
+    try:
+        await asyncio.to_thread(resend.Emails.send, {
+            "from": SENDER_EMAIL,
+            "to": [booking.customer_email],
+            "subject": f"Booking Confirmed - {business['business_name']}",
+            "html": f"""
+                <h1>Booking Confirmed</h1>
+                <p>Service: {booking.service_name}</p>
+                <p>Date: {booking.date}</p>
+                <p>Time: {booking.start_time} - {booking.end_time}</p>
+            """
+        })
+    except Exception as e:
+        logger.error(f"Email error: {e}")
 
-@api_router.post("/admin/register")
-async def register_admin(data: BusinessCreate):
-    existing = db.businesses.find_one({"email": data.email})
+# ===================== PUBLIC ROUTES =====================
+
+@api_router.get("/")
+async def root():
+    return {"message": "Embeddable Booking System API"}
+
+@api_router.post("/admin/register", response_model=LoginResponse)
+async def register(data: BusinessCreate):
+    existing = await db.businesses.find_one({"email": data.email})
     if existing:
-        raise HTTPException(status_code=400, detail="Email already exists")
+        raise HTTPException(status_code=400, detail="Email already registered")
 
-    business_id = str(uuid.uuid4())
+    business = Business(
+        business_name=data.business_name,
+        description=data.description,
+        email=data.email,
+        password_hash=hash_password(data.password),
+    )
 
-    business = {
-        "id": business_id,
-        "business_name": data.business_name,
-        "description": data.description,
-        "email": data.email,
-        "password_hash": hash_password(data.password),
-        "services": [],
-        "created_at": datetime.utcnow()
-    }
+    await db.businesses.insert_one(business.model_dump())
 
-    db.businesses.insert_one(business)
+    token = create_token(business.id)
 
-    token = create_token(business_id)
+    return LoginResponse(
+        token=token,
+        business_id=business.id,
+        business_name=business.business_name,
+    )
 
-    return {
-        "token": token,
-        "business_id": business_id,
-        "business_name": data.business_name
-    }
-
-# ==============================
-# Admin Login
-# ==============================
-
-@api_router.post("/admin/login")
-async def login_admin(data: LoginRequest):
-    business = db.businesses.find_one({"email": data.email})
-
+@api_router.post("/admin/login", response_model=LoginResponse)
+async def login(data: LoginRequest):
+    business = await db.businesses.find_one({"email": data.email})
     if not business:
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
@@ -169,62 +236,25 @@ async def login_admin(data: LoginRequest):
 
     token = create_token(business["id"])
 
-    return {
-        "token": token,
-        "business_id": business["id"],
-        "business_name": business["business_name"]
-    }
-
-# ==============================
-# Get Business Info (Protected)
-# ==============================
-
-@api_router.get("/admin/business")
-async def get_business(business_id: str = Depends(get_current_business)):
-    business = db.businesses.find_one(
-        {"id": business_id},
-        {"_id": 0, "password_hash": 0}
+    return LoginResponse(
+        token=token,
+        business_id=business["id"],
+        business_name=business["business_name"],
     )
 
-    if not business:
-        raise HTTPException(status_code=404, detail="Business not found")
+# ===================== PROTECTED =====================
 
-    return business
+@api_router.get("/admin/bookings", response_model=List[Booking])
+async def get_admin_bookings(business_id: str = Depends(get_current_business)):
+    return await db.bookings.find(
+        {"business_id": business_id},
+        {"_id": 0}
+    ).to_list(1000)
 
-# ==============================
-# Get Bookings (Protected)
-# ==============================
-
-@api_router.get("/admin/bookings")
-async def get_bookings(business_id: str = Depends(get_current_business)):
-    bookings = list(
-        db.bookings.find(
-            {"business_id": business_id},
-            {"_id": 0}
-        )
-    )
-    return bookings
-
-# ==============================
-# Public Booking Endpoint
-# ==============================
-
-@api_router.post("/book")
-async def create_booking(data: Booking):
-    db.bookings.insert_one(data.dict())
-    return {"message": "Booking confirmed"}
-
-# ==============================
-# Include Router
-# ==============================
+# ===================== FINAL SETUP =====================
 
 app.include_router(api_router)
-
-# ==============================
-# Shutdown
-# ==============================
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
-    print("Database connection closed")
