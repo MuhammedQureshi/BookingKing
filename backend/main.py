@@ -40,11 +40,16 @@ app = FastAPI(title="Embeddable Booking System API")
 # ✅ CORS MUST COME BEFORE ROUTER
 app.add_middleware(
     CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "https://booking-king-alpha.vercel.app",
+    ],
     allow_credentials=True,
-    allow_origins=os.environ.get("CORS_ORIGINS", "*").split(","),
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # ===================== DATABASE =====================
 
